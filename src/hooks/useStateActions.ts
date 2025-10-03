@@ -76,14 +76,21 @@ export const useStateActions = () => {
     handleChangeTab: changeTab,
 
     /**
-     * Handler for changing primary color
+     * Handler for changing primary color (immediate state update only)
      * @param color - The new primary color to set
      */
     handleChangeColor: (color: string) => {
-      // Analytics first
-      analyticsProvider.colorChanged(color);
-      // Then state update
+      // Only state update, no analytics
       actions.setPrimaryColor({ color });
+    },
+
+    /**
+     * Handler for debounced color change analytics (when user stops changing color)
+     * @param color - The new primary color that was set
+     */
+    handleColorChangeStop: (color: string) => {
+      // Only analytics, no state update
+      analyticsProvider.colorChanged(color);
     },
 
     /**

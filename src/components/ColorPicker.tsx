@@ -3,11 +3,17 @@ import React, { useRef, useCallback } from 'react';
 interface ColorPickerProps {
   currentColor: string;
   onColorChange: (color: string) => void;
+  onColorChangeDebounced?: (color: string) => void; // New prop for debounced analytics
 }
 
-export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorChange }) => {
+export const ColorPicker: React.FC<ColorPickerProps> = ({
+  currentColor,
+  onColorChange,
+  onColorChangeDebounced,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const [canvasSize, setCanvasSize] = React.useState({ width: 200, height: 200 });
 
@@ -130,7 +136,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
 
-    const { h, s, v } = hexToHsv(currentColor);
+    const { h, s } = hexToHsv(currentColor);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const outerRadius = Math.min(canvas.width, canvas.height) / 2 - 2;
@@ -179,6 +185,35 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
     return hsvToHex(angle, saturation, brightness);
   };
 
+  // Debounced color change handler for analytics
+  const handleDebouncedColorChange = useCallback(
+    (color: string) => {
+      // Clear existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      // Set new timeout for 0.5 seconds
+      debounceTimeoutRef.current = setTimeout(() => {
+        if (onColorChangeDebounced) {
+          onColorChangeDebounced(color);
+        }
+      }, 500);
+    },
+    [onColorChangeDebounced]
+  );
+
+  // Enhanced color change handler
+  const handleColorChange = useCallback(
+    (color: string) => {
+      // Immediate UI update
+      onColorChange(color);
+      // Debounced analytics
+      handleDebouncedColorChange(color);
+    },
+    [onColorChange, handleDebouncedColorChange]
+  );
+
   // Handle mouse down on color palette
   const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true);
@@ -191,7 +226,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
 
     const newColor = getColorFromCoordinates(x, y);
     if (newColor) {
-      onColorChange(newColor);
+      handleColorChange(newColor);
     }
   };
 
@@ -208,7 +243,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
 
     const newColor = getColorFromCoordinates(x, y);
     if (newColor) {
-      onColorChange(newColor);
+      handleColorChange(newColor);
     }
   };
 
@@ -230,7 +265,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
 
     const newColor = getColorFromCoordinates(x, y);
     if (newColor) {
-      onColorChange(newColor);
+      handleColorChange(newColor);
     }
   };
 
@@ -272,6 +307,15 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onColorC
       document.removeEventListener('mouseleave', handleGlobalMouseUp);
     };
   }, [isDragging]);
+
+  // Cleanup debounce timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const pointerPosition = getPointerPosition();
 

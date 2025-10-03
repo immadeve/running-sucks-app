@@ -18,6 +18,7 @@ function App() {
     handleSetFilter,
     handleButtonClick,
     handleChangeColor,
+    handleColorChangeStop,
     handleFileUploadOpened,
     handleFileUploadStart,
     handleFileUploadSuccess,
@@ -133,7 +134,11 @@ function App() {
                 onMapReset={handleMapReset}
               />
             ) : currentContentType === 'settings' ? (
-              <AppSettings primaryColor={primaryColor} onColorChange={handleChangeColor} />
+              <AppSettings
+                primaryColor={primaryColor}
+                onColorChange={handleChangeColor}
+                onColorChangeStop={handleColorChangeStop}
+              />
             ) : (
               <>
                 <FilterInput

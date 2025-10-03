@@ -9,7 +9,7 @@ export const analyticsProvider = {
    * @param description - The description of the clicked row
    */
   rowClicked: (id: number, title: string, description: string) => {
-    console.log(`row clicked - id: ${id}, title: "${title}", description: "${description}"`);
+    console.log(`📈row clicked - id: ${id}, title: "${title}", description: "${description}"`);
   },
 
   /**
@@ -17,7 +17,7 @@ export const analyticsProvider = {
    * @param id - The unique identifier for the button
    */
   buttonClicked: (id: string) => {
-    console.log(`button clicked - id: ${id}`);
+    console.log(`📈button clicked - id: ${id}`);
   },
 
   /**
@@ -33,7 +33,7 @@ export const analyticsProvider = {
    * @param resultCount - Number of results after filtering
    */
   filterApplied: (filterText: string, resultCount: number) => {
-    console.log(`filter applied - text: "${filterText}", results: ${resultCount}`);
+    console.log(`📈filter applied - text: "${filterText}", results: ${resultCount}`);
   },
 
   /**
@@ -41,7 +41,7 @@ export const analyticsProvider = {
    * @param tabName - The name of the tab being changed to
    */
   tabChanged: (tabName: string) => {
-    console.log(`tab changed - changed to tab: "${tabName}"`);
+    console.log(`📈tab changed - changed to tab: "${tabName}"`);
   },
 
   /**
@@ -49,14 +49,14 @@ export const analyticsProvider = {
    * @param color - The new primary color being set
    */
   colorChanged: (color: string) => {
-    console.log(`color changed - new color: "${color}"`);
+    console.log(`📈 color changed - new color: "${color}"`);
   },
 
   /**
    * Log file upload opened analytics
    */
   fileUploadOpened: () => {
-    console.log('file upload opened');
+    console.log('📈 file upload opened');
   },
 
   /**
@@ -64,7 +64,7 @@ export const analyticsProvider = {
    * @param fileName - The name of the file being uploaded
    */
   fileUploadStarted: (fileName: string) => {
-    console.log(`file upload started - file: "${fileName}"`);
+    console.log(`📈file upload started - file: "${fileName}"`);
   },
 
   /**
@@ -73,27 +73,27 @@ export const analyticsProvider = {
    * @param fileSize - The size of the uploaded file in bytes
    */
   fileUploadSucceeded: (fileName: string, fileSize: number) => {
-    console.log(`file upload succeeded - file: "${fileName}", size: ${fileSize} bytes`);
+    console.log(`📈file upload succeeded - file: "${fileName}", size: ${fileSize} bytes`);
   },
 
   /**
    * Log view details clicked analytics
    */
   viewDetailsClicked: () => {
-    console.log('view details clicked');
+    console.log('📈 view details clicked');
   },
 
   /**
    * Log map reset analytics
    */
   mapReseted: () => {
-    console.log('map reseted');
+    console.log('📈 map reseted');
   },
 
   /**
    * Log settings opened analytics
    */
   settingsOpened: () => {
-    console.log('settings opened');
+    console.log('📈 settings opened');
   },
 };
